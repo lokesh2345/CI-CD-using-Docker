@@ -34,9 +34,11 @@ pipeline {
   stage('Publish image to Docker Hub') {
           
             steps {
-        withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-          sh  'docker push lokesh25434/samplewebapp:latest'
-        //  sh  'docker push lokesh25434/samplewebapp:$BUILD_NUMBER' 
+		withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
+        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+      sh 'docker login -u "$USERNAME" -p "$PASSWORD"'
+      cont.push()
+    }
         }
                   
           }
